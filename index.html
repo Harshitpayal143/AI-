@@ -6,6 +6,8 @@
     <title>NeuraForge - AI & Model Technology</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Load Google Platform Library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         :root {
             --primary: #7e22ce;
@@ -17,6 +19,7 @@
             --light: #f8fafc;
             --gray: #64748b;
             --success: #10b981;
+            --error: #ef4444;
             --gradient-start: #8b5cf6;
             --gradient-end: #06b6d4;
         }
@@ -467,6 +470,7 @@
         .search-header {
             text-align: center;
             margin-bottom: 40px;
+            position: relative;
         }
         
         .search-header h2 {
@@ -586,6 +590,385 @@
         
         .loading p {
             color: var(--accent);
+        }
+        
+        /* Research History Section */
+        .research-history {
+            padding: 100px 0;
+            position: relative;
+            display: none;
+        }
+        
+        .research-history.active {
+            display: block;
+        }
+        
+        .history-container {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .history-header h2 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #f0abfc, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .clear-history {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .clear-history:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+        
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            position: relative;
+        }
+        
+        .history-item {
+            background: rgba(2, 6, 23, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .history-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .history-query {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+        
+        .history-device {
+            display: flex;
+            align-items: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .history-device i {
+            margin-right: 8px;
+        }
+        
+        .history-date {
+            color: var(--gray);
+            font-size: 0.8rem;
+            text-align: right;
+        }
+        
+        /* Auth Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(2, 6, 23, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .auth-modal {
+            background: rgba(15, 23, 42, 0.95);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        
+        .modal-overlay.active .auth-modal {
+            transform: translateY(0);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f0abfc, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .auth-header p {
+            color: var(--gray);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 25px;
+            background: rgba(2, 6, 23, 0.5);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab.active {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--light);
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(2, 6, 23, 0.7);
+            color: var(--light);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .form-error {
+            color: var(--error);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .form-error.active {
+            display: block;
+        }
+        
+        .auth-submit {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .auth-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .auth-footer a {
+            color: var(--accent);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--light);
+        }
+        
+        /* Google Sign-In Button */
+        .google-signin-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--gray);
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .divider span {
+            padding: 0 10px;
+            font-size: 0.9rem;
+        }
+        
+        .google-signin-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: #757575;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        
+        .google-signin-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .google-signin-btn img {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        /* User Profile */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .user-name {
+            color: var(--light);
+            font-weight: 500;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            border-radius: 8px;
+            padding: 10px 0;
+            margin-top: 10px;
+            min-width: 150px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            z-index: 101;
+        }
+        
+        .user-profile:hover .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--light);
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .user-dropdown a:hover {
+            background: rgba(126, 34, 206, 0.1);
         }
         
         /* Footer */
@@ -742,6 +1125,20 @@
                 transform: none;
                 height: 50px;
             }
+            
+            .history-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .auth-modal {
+                padding: 30px 20px;
+            }
+            
+            .user-name {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -752,33 +1149,119 @@
             <nav>
                 <div class="logo">
                     <i class="fas fa-microchip"></i>
-                    <span>NeuraForge</span>
+                    <span>VISION.XX</span>
                 </div>
                 <div class="nav-links">
                     <a href="#">Platform</a>
                     <a href="#">Models</a>
-                    <a href="#">Solutions</a>
+                    <a href="#" id="explore-research-link">Solutions</a>
                     <a href="#">Research</a>
                     <a href="#">Pricing</a>
                 </div>
-                <div class="auth-buttons">
-                    <button class="btn btn-outline">Sign In</button>
-                    <button class="btn btn-primary">Get Started</button>
+                <div class="auth-buttons" id="auth-buttons">
+                    <button class="btn btn-outline" id="signin-button">Sign In</button>
+                    <button class="btn btn-primary" id="signup-button">Get Started</button>
+                </div>
+                <div class="user-profile" id="user-profile" style="display: none;">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <div class="user-name" id="user-name">User</div>
+                    <div class="user-dropdown">
+                        <a href="#" id="profile-link">Profile</a>
+                        <a href="#" id="logout-link">Logout</a>
+                    </div>
                 </div>
             </nav>
         </div>
     </header>
+
+    <!-- Auth Modals -->
+    <div class="modal-overlay" id="auth-modal">
+        <div class="auth-modal">
+            <button class="close-modal" id="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="auth-header">
+                <h2 id="auth-modal-title">Welcome Back</h2>
+                <p id="auth-modal-subtitle">Sign in to your NeuraForge account</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="signin">Sign In</div>
+                <div class="auth-tab" data-tab="signup">Sign Up</div>
+            </div>
+            
+            <!-- Google Sign-In Button -->
+            <div class="google-signin-container">
+                <div id="g_id_onload"
+                    data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                    data-context="signin"
+                    data-ux_mode="popup"
+                    data-callback="handleGoogleSignIn"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+            </div>
+            
+            <div class="divider">
+                <span>or</span>
+            </div>
+            
+            <form class="auth-form active" id="signin-form">
+                <div class="form-group">
+                    <label for="signin-email">Email</label>
+                    <input type="email" id="signin-email" required>
+                    <div class="form-error" id="signin-email-error">Please enter a valid email address</div>
+                </div>
+                <div class="form-group">
+                    <label for="signin-password">Password</label>
+                    <input type="password" id="signin-password" required>
+                    <div class="form-error" id="signin-password-error">Password is required</div>
+                </div>
+                <button type="submit" class="auth-submit">Sign In</button>
+                <div class="auth-footer">
+                    Don't have an account? <a id="switch-to-signup">Sign Up</a>
+                </div>
+            </form>
+            
+            <form class="auth-form" id="signup-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" required>
+                    <div class="form-error" id="signup-name-error">Name is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" required>
+                    <div class="form-error" id="signup-email-error">Please enter a valid email address</div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required minlength="6">
+                    <div class="form-error" id="signup-password-error">Password must be at least 6 characters</div>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm">Confirm Password</label>
+                    <input type="password" id="signup-confirm" required>
+                    <div class="form-error" id="signup-confirm-error">Passwords do not match</div>
+                </div>
+                <button type="submit" class="auth-submit">Create Account</button>
+                <div class="auth-footer">
+                    Already have an account? <a id="switch-to-signin">Sign In</a>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="hero-content">
                 <h1>Next-Gen AI Development Platform</h1>
-                <p>NeuraForge empowers developers and researchers to build, train, and deploy cutting-edge AI models with unprecedented efficiency and scale.</p>
+                <p>VISION.XX empowers developers and researchers to build, train, and deploy cutting-edge AI models with unprecedented efficiency and scale.</p>
                 <div class="hero-buttons">
                     <button class="btn btn-primary">Start Building</button>
                     <button class="btn btn-outline">Watch Demo</button>
-                    <button class="btn btn-outline">Explore Research</button>
+                    <button class="btn btn-outline" id="view-research-btn">Explore Research</button>
                 </div>
             </div>
             <div class="hero-image">
@@ -810,6 +1293,21 @@
                         <i class="fas fa-robot" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
                         <p>Your AI-generated response will appear here. Ask me anything!</p>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research History Section -->
+    <section class="research-history" id="research-history">
+        <div class="container">
+            <div class="history-container">
+                <div class="history-header">
+                    <h2>Your Research History</h2>
+                    <div class="clear-history" id="clear-history">Clear History</div>
+                </div>
+                <div class="history-grid" id="history-grid">
+                    <!-- History items will be dynamically added here -->
                 </div>
             </div>
         </div>
@@ -995,8 +1493,367 @@
     </footer>
 
     <script>
-        // Interactive elements
+        // User authentication functionality
         document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const authButtons = document.getElementById('auth-buttons');
+            const userProfile = document.getElementById('user-profile');
+            const userAvatar = document.getElementById('user-avatar');
+            const userName = document.getElementById('user-name');
+            const signinButton = document.getElementById('signin-button');
+            const signupButton = document.getElementById('signup-button');
+            const authModal = document.getElementById('auth-modal');
+            const closeModal = document.getElementById('close-modal');
+            const authTabs = document.querySelectorAll('.auth-tab');
+            const authForms = document.querySelectorAll('.auth-form');
+            const signinForm = document.getElementById('signin-form');
+            const signupForm = document.getElementById('signup-form');
+            const switchToSignup = document.getElementById('switch-to-signup');
+            const switchToSignin = document.getElementById('switch-to-signin');
+            const logoutLink = document.getElementById('logout-link');
+            const authModalTitle = document.getElementById('auth-modal-title');
+            const authModalSubtitle = document.getElementById('auth-modal-subtitle');
+            
+            // Check if user is logged in
+            function checkAuthStatus() {
+                const currentUser = JSON.parse(localStorage.getItem('neuraforgeCurrentUser'));
+                
+                if (currentUser) {
+                    // User is logged in
+                    authButtons.style.display = 'none';
+                    userProfile.style.display = 'flex';
+                    
+                    // Set user avatar (use Google profile picture if available)
+                    if (currentUser.picture) {
+                        userAvatar.textContent = '';
+                        userAvatar.style.backgroundImage = `url(${currentUser.picture})`;
+                    } else {
+                        userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+                        userAvatar.style.backgroundImage = 'none';
+                    }
+                    
+                    userName.textContent = currentUser.name;
+                } else {
+                    // User is not logged in
+                    authButtons.style.display = 'flex';
+                    userProfile.style.display = 'none';
+                }
+            }
+            
+            // Show auth modal
+            function showAuthModal(formType = 'signin') {
+                authModal.classList.add('active');
+                
+                // Set the active form
+                if (formType === 'signin') {
+                    switchAuthTab('signin');
+                } else {
+                    switchAuthTab('signup');
+                }
+            }
+            
+            // Hide auth modal
+            function hideAuthModal() {
+                authModal.classList.remove('active');
+                clearFormErrors();
+                resetForms();
+            }
+            
+            // Switch between auth tabs
+            function switchAuthTab(tabName) {
+                // Update tabs
+                authTabs.forEach(tab => {
+                    if (tab.dataset.tab === tabName) {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
+                    }
+                });
+                
+                // Update forms
+                authForms.forEach(form => {
+                    if (form.id === `${tabName}-form`) {
+                        form.classList.add('active');
+                    } else {
+                        form.classList.remove('active');
+                    }
+                });
+                
+                // Update modal title and subtitle
+                if (tabName === 'signin') {
+                    authModalTitle.textContent = 'Welcome Back';
+                    authModalSubtitle.textContent = 'Sign in to your NeuraForge account';
+                } else {
+                    authModalTitle.textContent = 'Create Account';
+                    authModalSubtitle.textContent = 'Join the NeuraForge community';
+                }
+            }
+            
+            // Clear form errors
+            function clearFormErrors() {
+                const errorElements = document.querySelectorAll('.form-error');
+                errorElements.forEach(error => {
+                    error.classList.remove('active');
+                });
+            }
+            
+            // Reset forms
+            function resetForms() {
+                signinForm.reset();
+                signupForm.reset();
+            }
+            
+            // Validate email format
+            function isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            // Sign up function
+            function signUp(name, email, password) {
+                // Get existing users or initialize empty array
+                const users = JSON.parse(localStorage.getItem('neuraforgeUsers')) || [];
+                
+                // Check if email already exists
+                if (users.some(user => user.email === email)) {
+                    alert('This email is already registered. Please sign in instead.');
+                    switchAuthTab('signin');
+                    return false;
+                }
+                
+                // Create new user
+                const newUser = {
+                    id: Date.now().toString(),
+                    name,
+                    email,
+                    password, // Note: In a real app, you would hash the password
+                    createdAt: new Date().toISOString(),
+                    authProvider: 'email'
+                };
+                
+                // Add to users array
+                users.push(newUser);
+                
+                // Save to localStorage
+                localStorage.setItem('neuraforgeUsers', JSON.stringify(users));
+                
+                // Set as current user
+                localStorage.setItem('neuraforgeCurrentUser', JSON.stringify(newUser));
+                
+                return true;
+            }
+            
+            // Sign in function
+            function signIn(email, password) {
+                // Get users from localStorage
+                const users = JSON.parse(localStorage.getItem('neuraforgeUsers')) || [];
+                
+                // Find user with matching credentials
+                const user = users.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    // Set as current user
+                    localStorage.setItem('neuraforgeCurrentUser', JSON.stringify(user));
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            // Sign out function
+            function signOut() {
+                // Sign out from Google if the user signed in with Google
+                const currentUser = JSON.parse(localStorage.getItem('neuraforgeCurrentUser'));
+                if (currentUser && currentUser.authProvider === 'google') {
+                    // Google sign out logic
+                    if (typeof google !== 'undefined') {
+                        google.accounts.id.disableAutoSelect();
+                        google.accounts.id.revoke(currentUser.email, done => {
+                            console.log('Consent revoked');
+                        });
+                    }
+                }
+                
+                localStorage.removeItem('neuraforgeCurrentUser');
+                checkAuthStatus();
+            }
+            
+            // Handle Google Sign-In
+            window.handleGoogleSignIn = function(response) {
+                // Handle the Google sign-in response
+                const responsePayload = parseJwt(response.credential);
+                
+                // Create user object from Google response
+                const googleUser = {
+                    id: responsePayload.sub,
+                    name: responsePayload.name,
+                    email: responsePayload.email,
+                    picture: responsePayload.picture,
+                    authProvider: 'google',
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Save or update user in local storage
+                const users = JSON.parse(localStorage.getItem('neuraforgeUsers')) || [];
+                const existingUserIndex = users.findIndex(user => user.email === googleUser.email);
+                
+                if (existingUserIndex !== -1) {
+                    // Update existing user with Google info
+                    users[existingUserIndex] = {...users[existingUserIndex], ...googleUser};
+                } else {
+                    // Add new user
+                    users.push(googleUser);
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('neuraforgeUsers', JSON.stringify(users));
+                localStorage.setItem('neuraforgeCurrentUser', JSON.stringify(googleUser));
+                
+                // Update UI and close modal
+                checkAuthStatus();
+                hideAuthModal();
+            };
+            
+            // Helper function to parse JWT token
+            function parseJwt(token) {
+                try {
+                    return JSON.parse(atob(token.split('.')[1]));
+                } catch (e) {
+                    return null;
+                }
+            }
+            
+            // Event Listeners
+            signinButton.addEventListener('click', () => showAuthModal('signin'));
+            signupButton.addEventListener('click', () => showAuthModal('signup'));
+            
+            closeModal.addEventListener('click', hideAuthModal);
+            
+            authModal.addEventListener('click', (e) => {
+                if (e.target === authModal) {
+                    hideAuthModal();
+                }
+            });
+            
+            authTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchAuthTab(tab.dataset.tab);
+                });
+            });
+            
+            switchToSignup.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchAuthTab('signup');
+            });
+            
+            switchToSignin.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchAuthTab('signin');
+            });
+            
+            logoutLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                signOut();
+            });
+            
+            // Sign in form submission
+            signinForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                clearFormErrors();
+                
+                const email = document.getElementById('signin-email').value;
+                const password = document.getElementById('signin-password').value;
+                
+                let isValid = true;
+                
+                // Validate email
+                if (!email) {
+                    document.getElementById('signin-email-error').textContent = 'Email is required';
+                    document.getElementById('signin-email-error').classList.add('active');
+                    isValid = false;
+                } else if (!isValidEmail(email)) {
+                    document.getElementById('signin-email-error').textContent = 'Please enter a valid email address';
+                    document.getElementById('signin-email-error').classList.add('active');
+                    isValid = false;
+                }
+                
+                // Validate password
+                if (!password) {
+                    document.getElementById('signin-password-error').textContent = 'Password is required';
+                    document.getElementById('signin-password-error').classList.add('active');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    if (signIn(email, password)) {
+                        hideAuthModal();
+                        checkAuthStatus();
+                    } else {
+                        alert('Invalid email or password. Please try again.');
+                    }
+                }
+            });
+            
+            // Sign up form submission
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                clearFormErrors();
+                
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                const confirm = document.getElementById('signup-confirm').value;
+                
+                let isValid = true;
+                
+                // Validate name
+                if (!name) {
+                    document.getElementById('signup-name-error').textContent = 'Name is required';
+                    document.getElementById('signup-name-error').classList.add('active');
+                    isValid = false;
+                }
+                
+                // Validate email
+                if (!email) {
+                    document.getElementById('signup-email-error').textContent = 'Email is required';
+                    document.getElementById('signup-email-error').classList.add('active');
+                    isValid = false;
+                } else if (!isValidEmail(email)) {
+                    document.getElementById('signup-email-error').textContent = 'Please enter a valid email address';
+                    document.getElementById('signup-email-error').classList.add('active');
+                    isValid = false;
+                }
+                
+                // Validate password
+                if (!password) {
+                    document.getElementById('signup-password-error').textContent = 'Password is required';
+                    document.getElementById('signup-password-error').classList.add('active');
+                    isValid = false;
+                } else if (password.length < 6) {
+                    document.getElementById('signup-password-error').textContent = 'Password must be at least 6 characters';
+                    document.getElementById('signup-password-error').classList.add('active');
+                    isValid = false;
+                }
+                
+                // Validate confirm password
+                if (password !== confirm) {
+                    document.getElementById('signup-confirm-error').textContent = 'Passwords do not match';
+                    document.getElementById('signup-confirm-error').classList.add('active');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    if (signUp(name, email, password)) {
+                        hideAuthModal();
+                        checkAuthStatus();
+                    }
+                }
+            });
+            
+            // Initialize auth status
+            checkAuthStatus();
+            
+            // Existing functionality from your original code
             const buttons = document.querySelectorAll('.btn');
             const featureCards = document.querySelectorAll('.feature-card');
             const modelCards = document.querySelectorAll('.model-card');
@@ -1065,6 +1922,106 @@
                 observer.observe(el);
             });
             
+            // Device detection function
+            function getDeviceInfo() {
+                const userAgent = navigator.userAgent;
+                let deviceType = 'Unknown Device';
+                
+                if (/Android/i.test(userAgent)) {
+                    deviceType = 'Android Device';
+                } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                    deviceType = 'iOS Device';
+                } else if (/Windows/i.test(userAgent)) {
+                    deviceType = 'Windows PC';
+                } else if (/Mac/i.test(userAgent)) {
+                    deviceType = 'Mac';
+                } else if (/Linux/i.test(userAgent)) {
+                    deviceType = 'Linux PC';
+                }
+                
+                return deviceType;
+            }
+            
+            // Research history functionality
+            const researchHistorySection = document.getElementById('research-history');
+            const historyGrid = document.getElementById('history-grid');
+            const clearHistoryBtn = document.getElementById('clear-history');
+            const viewResearchBtn = document.getElementById('view-research-btn');
+            const exploreResearchLink = document.getElementById('explore-research-link');
+            
+            // Load saved research history
+            function loadResearchHistory() {
+                const history = JSON.parse(localStorage.getItem('neuraforgeResearchHistory')) || [];
+                historyGrid.innerHTML = '';
+                
+                if (history.length === 0) {
+                    historyGrid.innerHTML = '<p style="color: var(--gray); text-align: center; grid-column: 1 / -1;">No research history yet. Your searches will appear here.</p>';
+                    return;
+                }
+                
+                // Display history in reverse order (newest first)
+                history.reverse().forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    
+                    // Determine device icon
+                    let deviceIcon = 'fa-desktop';
+                    if (item.device.includes('Android')) deviceIcon = 'fa-mobile-alt';
+                    if (item.device.includes('iOS')) deviceIcon = 'fa-mobile-alt';
+                    if (item.device.includes('Windows')) deviceIcon = 'fa-laptop';
+                    if (item.device.includes('Mac')) deviceIcon = 'fa-laptop';
+                    
+                    historyItem.innerHTML = `
+                        <div class="history-query">${item.query}</div>
+                        <div class="history-device">
+                            <i class="fas ${deviceIcon}"></i>
+                            <span>${item.device}</span>
+                        </div>
+                        <div class="history-date">${new Date(item.timestamp).toLocaleString()}</div>
+                    `;
+                    
+                    historyGrid.appendChild(historyItem);
+                });
+            }
+            
+            // Save search to history
+            function saveToResearchHistory(query) {
+                const history = JSON.parse(localStorage.getItem('neuraforgeResearchHistory')) || [];
+                
+                // Add new search with device info and timestamp
+                history.push({
+                    query: query,
+                    device: getDeviceInfo(),
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Save back to localStorage
+                localStorage.setItem('neuraforgeResearchHistory', JSON.stringify(history));
+                
+                // Reload the history display
+                loadResearchHistory();
+            }
+            
+            // Clear history
+            clearHistoryBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear your research history?')) {
+                    localStorage.removeItem('neuraforgeResearchHistory');
+                    loadResearchHistory();
+                }
+            });
+            
+            // Show research history section
+            viewResearchBtn.addEventListener('click', function() {
+                researchHistorySection.classList.add('active');
+                researchHistorySection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            exploreResearchLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                researchHistorySection.classList.add('active');
+                researchHistorySection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
             // AI Search functionality
             const searchInput = document.getElementById('ai-search-input');
             const searchButton = document.getElementById('ai-search-button');
@@ -1121,6 +2078,9 @@
                             ${formattedResponse}
                         </div>
                     `;
+                    
+                    // Save the search to research history
+                    saveToResearchHistory(prompt);
                     
                 } catch (error) {
                     console.error('Error calling Gemini API:', error);
@@ -1180,6 +2140,9 @@
                     }
                 }
             });
+            
+            // Initialize research history on page load
+            loadResearchHistory();
         });
     </script>
 </body>
