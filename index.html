@@ -592,6 +592,74 @@
             color: var(--accent);
         }
         
+        /* Image Gallery */
+        .image-gallery {
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+        
+        .gallery-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .gallery-item {
+            border-radius: 8px;
+            overflow: hidden;
+            height: 150px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        .view-more {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .view-more:hover {
+            text-decoration: underline;
+        }
+        
         /* Research History Section */
         .research-history {
             padding: 100px 0;
@@ -725,6 +793,7 @@
         .auth-header {
             text-align: center;
             margin-bottom: 30px;
+            position: relative;
         }
         
         .auth-header h2 {
@@ -1138,6 +1207,14 @@
             
             .user-name {
                 display: none;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .gallery-item {
+                height: 120px;
             }
         }
     </style>
@@ -2079,6 +2156,12 @@
                         </div>
                     `;
                     
+                    // Check if we should search for images based on the query
+                    if (shouldSearchForImages(prompt)) {
+                        const imageSearchTerm = extractImageSearchTerm(prompt);
+                        searchPixabayImages(imageSearchTerm);
+                    }
+                    
                     // Save the search to research history
                     saveToResearchHistory(prompt);
                     
@@ -2091,6 +2174,88 @@
                         </div>
                     `;
                 }
+            }
+            
+            // Function to determine if we should search for images
+            function shouldSearchForImages(query) {
+                const imageKeywords = [
+                    'image', 'images', 'photo', 'photos', 'picture', 'pictures',
+                    'show me', 'look like', 'visual', 'see', 'view', 'illustration',
+                    'art', 'drawing', 'painting', 'graphic', 'design'
+                ];
+                
+                return imageKeywords.some(keyword => 
+                    query.toLowerCase().includes(keyword.toLowerCase())
+                );
+            }
+            
+            // Function to extract search term for images
+            function extractImageSearchTerm(query) {
+                // Remove common question words and image-related terms
+                const wordsToRemove = [
+                    'what', 'does', 'do', 'look', 'like', 'show', 'me', 'images', 
+                    'image', 'photos', 'photo', 'pictures', 'picture', 'of', 'the', 'a', 'an'
+                ];
+                
+                let searchTerm = query
+                    .toLowerCase()
+                    .replace(/[^\w\s]/gi, '') // Remove punctuation
+                    .split(' ')
+                    .filter(word => !wordsToRemove.includes(word))
+                    .join(' ');
+                
+                // If the search term is too short, use the original query
+                if (searchTerm.split(' ').length < 2 && searchTerm.length < 8) {
+                    searchTerm = query;
+                }
+                
+                return searchTerm.trim() || 'artificial intelligence';
+            }
+            
+            // Function to search Pixabay for images
+            async function searchPixabayImages(searchTerm) {
+                const PIXABAY_API_KEY = '51995580-034b5fae4bc9535251e1dfe92';
+                const apiUrl = `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(searchTerm)}&image_type=photo&per_page=6`;
+                
+                try {
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+                    
+                    if (data.hits && data.hits.length > 0) {
+                        displayImages(data.hits, searchTerm);
+                    }
+                } catch (error) {
+                    console.error('Error fetching images from Pixabay:', error);
+                }
+            }
+            
+            // Function to display images in the results
+            function displayImages(images, searchTerm) {
+                const galleryHtml = `
+                    <div class="image-gallery">
+                        <div class="gallery-title">Related Images for "${searchTerm}"</div>
+                        <div class="gallery-grid">
+                            ${images.slice(0, 6).map(image => `
+                                <div class="gallery-item">
+                                    <img src="${image.webformatURL}" alt="${image.tags}" class="gallery-image">
+                                    <div class="gallery-overlay">By ${image.user}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <a href="https://pixabay.com/images/search/${encodeURIComponent(searchTerm)}/" target="_blank" class="view-more">View more images on Pixabay</a>
+                    </div>
+                `;
+                
+                // Append the gallery to the search results
+                searchResults.innerHTML += galleryHtml;
+                
+                // Add click event to open images in full view
+                document.querySelectorAll('.gallery-item').forEach((item, index) => {
+                    item.addEventListener('click', () => {
+                        const imageUrl = images[index].largeImageURL;
+                        window.open(imageUrl, '_blank');
+                    });
+                });
             }
             
             // Basic markdown formatting function
