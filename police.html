@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - NeuraForge AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7e22ce;
+            --primary-dark: #6b21a8;
+            --secondary: #06b6d4;
+            --accent: #22d3ee;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #10b981;
+            --error: #ef4444;
+            --gradient-start: #8b5cf6;
+            --gradient-end: #06b6d4;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(126, 34, 206, 0.3);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(126, 34, 206, 0.1);
+        }
+        
+        /* Policy Hero */
+        .policy-hero {
+            padding: 100px 0 50px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .policy-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f0abfc, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .policy-hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .last-updated {
+            margin-top: 20px;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+        
+        /* Policy Content */
+        .policy-content {
+            padding: 50px 0 100px;
+        }
+        
+        .policy-section {
+            margin-bottom: 60px;
+        }
+        
+        .policy-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+        }
+        
+        .policy-section h2 i {
+            margin-right: 15px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .policy-section p {
+            margin-bottom: 20px;
+            color: var(--gray);
+            line-height: 1.8;
+        }
+        
+        .policy-section ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .policy-section li {
+            margin-bottom: 10px;
+            color: var(--gray);
+        }
+        
+        .highlight-box {
+            background: rgba(15, 23, 42, 0.5);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 30px 0;
+        }
+        
+        .contact-info {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .contact-info h3 {
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        
+        .contact-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .contact-item {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .contact-item h4 {
+            color: var(--light);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-item h4 i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .contact-item p {
+            color: var(--gray);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            padding: 80px 0 30px;
+            position: relative;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: var(--light);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: var(--accent);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .policy-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .policy-section h2 {
+                font-size: 1.7rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .contact-details {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">
+                    <i class="fas fa-microchip"></i>
+                    <span>VISION.XX</span>
+                </a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="#">Platform</a>
+                    <a href="#">Models</a>
+                    <a href="#">Solutions</a>
+                    <a href="#">Research</a>
+                </div>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline">Sign In</button>
+                    <button class="btn btn-primary">Get Started</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Policy Hero -->
+    <section class="policy-hero">
+        <div class="container">
+            <h1>Privacy Policy</h1>
+            <p>At NeuraForge AI, we are committed to protecting your privacy and ensuring transparency about how we handle your data.</p>
+            <div class="last-updated">Last Updated: January 15, 2024</div>
+        </div>
+    </section>
+
+    <!-- Policy Content -->
+    <section class="policy-content">
+        <div class="container">
+            <div class="policy-section">
+                <h2><i class="fas fa-info-circle"></i> Introduction</h2>
+                <p>Welcome to NeuraForge AI's Privacy Policy. This policy describes how we collect, use, process, and protect your personal information when you use our services, including our AI platform, website, and related services.</p>
+                <p>By accessing or using our services, you agree to the collection and use of information in accordance with this policy.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2><i class="fas fa-database"></i> Information We Collect</h2>
+                <p>We collect several types of information for various purposes to provide and improve our service to you:</p>
+                
+                <h3>Personal Data</h3>
+                <p>While using our service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you:</p>
+                <ul>
+                    <li>Email address</li>
+                    <li>First name and last name</li>
+                    <li>Phone number</li>
+                    <li>Address, State, Province, ZIP/Postal code, City</li>
+                    <li>Cookies and Usage Data</li>
+                </ul>
+                
+                <h3>Usage Data</h3>
+                <p>We may also collect information on how the service is accessed and used:</p>
+                <ul>
+                    <li>IP address</li>
+                    <li>Browser type and version</li>
+                    <li>Pages visited on our service</li>
+                    <li>Time and date of visit</li>
+                    <li>Time spent on those pages</li>
+                    <li>Device information</li>
+                    <li>AI model usage statistics</li>
+                </ul>
+                
+                <h3>AI Training Data</h3>
+                <p>When you use our AI services, we may collect:</p>
+                <ul>
+                    <li>Inputs provided to our AI models</li>
+                    <li>Outputs generated by our AI models</li>
+                    <li>Feedback on AI performance</li>
+                    <li>Interaction patterns with our AI systems</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <p><strong>Note:</strong> We anonymize and aggregate data used for model training purposes. Personal identifiers are removed before data is used to improve our AI systems.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <h2><i class="fas fa-cookie"></i> Cookies and Tracking Technologies</h2>
+                <p>We use cookies and similar tracking technologies to track activity on our service and hold certain information.</p>
+                <p>Cookies are files with a small amount of data which may include an anonymous unique identifier. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.</p>
+                
+                <h3>Types of Cookies We Use:</h3>
+                <ul>
+                    <li><strong>Essential Cookies:</strong> Required for the operation of our service</li>
+                    <li><strong>Analytical/Performance Cookies:</strong> Allow us to recognize and count visitors</li>
+                    <li><strong>Functionality Cookies:</strong> Enable us to personalize content</li>
+                    <li><strong>Targeting Cookies:</strong> Record your visit and pages visited</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h2><i class="fas fa-shield-alt"></i> How We Use Your Data</h2>
+                <p>NeuraForge AI uses the collected data for various purposes:</p>
+                <ul>
+                    <li>To provide and maintain our service</li>
+                    <li>To notify you about changes to our service</li>
+                    <li>To allow you to participate in interactive features</li>
+                    <li>To provide customer support</li>
+                    <li>To gather analysis or valuable information to improve our service</li>
+                    <li>To monitor the usage of our service</li>
+                    <li>To detect, prevent and address technical issues</li>
+                    <li>To train and improve our AI models (with appropriate anonymization)</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h2><i class="fas fa-exchange-alt"></i> Data Sharing and Disclosure</h2>
+                <p>We may share your personal information in the following situations:</p>
+                
+                <h3>With Service Providers</h3>
+                <p>We may share your personal information with service providers to monitor and analyze the use of our service, to contact you.</p>
+                
+                <h3>For Business Transfers</h3>
+                <p>We may share or transfer your personal information in connection with, or during negotiations of, any merger, sale of company assets, financing, or acquisition of all or a portion of our business to another company.</p>
+                
+                <h3>With Affiliates</h3>
+                <p>We may share your information with our affiliates, in which case we will require those affiliates to honor this Privacy Policy.</p>
+                
+                <h3>With Business Partners</h3>
+                <p>We may share your information with our business partners to offer you certain products, services or promotions.</p>
+                
+                <h3>With Your Consent</h3>
+                <p>We may disclose your personal information for any other purpose with your consent.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2><i class="fas fa-lock"></i> Data Security</h2>
+                <p>The security of your data is important to us. We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction.</p>
+                <p>However, remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your personal data, we cannot guarantee its absolute security.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2><i class="fas fa-globe"></i> International Data Transfers</h2>
+                <p>Your information, including personal data, may be transferred to — and maintained on — computers located outside of your state, province, country or other governmental jurisdiction where the data protection laws may differ from those of your jurisdiction.</p>
+                <p>We ensure appropriate safeguards are in place to protect your personal data when transferred internationally, including using standard contractual clauses approved by relevant authorities.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2><i class="fas fa-user-shield"></i> Your Data Protection Rights</h2>
+                <p>Depending on your location, you may have the following data protection rights:</p>
+                <ul>
+                    <li><strong>Access:</strong> The right to access and receive copies of your personal information</li>
+                    <li><strong>Rectification:</strong> The right to correct inaccurate or incomplete information</li>
+                    <li><strong>Erasure:</strong> The right to request deletion of your personal data</li>
+                    <li><strong>Restriction:</strong> The right to request temporary restriction of processing</li>
+                    <li><strong>Portability:</strong> The right to receive your data in a structured, machine-readable format</li>
+                    <li><strong>Objection:</strong> The right to object to processing of your personal data</li>
+                    <li><strong>Withdraw Consent:</strong> The right to withdraw consent where we rely on consent to process your data</li>
+                </ul>
+                
+                <p>To exercise any of these rights, please contact us using the details provided in the Contact section.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2><i class="fas fa-child"></i> Children's Privacy</h2>
+                <p>Our service does not address anyone under the age of 16. We do not knowingly collect personally identifiable information from anyone under the age of 16.</p>
+                <p>If you are a parent or guardian and you are aware that your child has provided us with personal data, please contact us. If we become aware that we have collected personal data from anyone under the age of 16 without verification of parental consent, we take steps to remove that information from our servers.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2><i class="fas fa-link"></i> Links to Other Sites</h2>
+                <p>Our service may contain links to other sites that are not operated by us. If you click on a third-party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy of every site you visit.</p>
+                <p>We have no control over and assume no responsibility for the content, privacy policies or practices of any third-party sites or services.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2><i class="fas fa-pencil-alt"></i> Changes to This Privacy Policy</h2>
+                <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
+                <p>We will also notify you via email and/or a prominent notice on our service, prior to the change becoming effective, if the changes are significant.</p>
+                <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+            </div>
+
+            <div class="contact-info">
+                <h3>Contact Us</h3>
+                <p>If you have any questions about this Privacy Policy, please contact us:</p>
+                
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <h4><i class="fas fa-envelope"></i> Email</h4>
+                        <p>privacy@neuraforge.ai</p>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <h4><i class="fas fa-map-marker-alt"></i> Address</h4>
+                        <p>NeuraForge AI Inc.<br>
+                        123 Innovation Drive<br>
+                        Tech Valley, CA 94107<br>
+                        United States</p>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <h4><i class="fas fa-phone"></i> Phone</h4>
+                        <p>+1 (555) 123-4567</p>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <h4><i class="fas fa-clock"></i> Office Hours</h4>
+                        <p>Monday-Friday: 9AM to 5PM PST</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>NeuraForge</h3>
+                    <p>Pushing the boundaries of artificial intelligence through innovative technology and research.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Platform</h3>
+                    <ul>
+                        <li><a href="#">Model Training</a></li>
+                        <li><a href="#">AutoML</a></li>
+                        <li><a href="#">Deployment</a></li>
+                        <li><a href="#">Monitoring</a></li>
+                        <li><a href="#">Enterprise</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Research Papers</a></li>
+                        <li><a href="#">Case Studies</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Data Processing Agreement</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 NeuraForge AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script to handle navigation and make page interactive
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Add animation to policy sections when they come into view
+            const policySections = document.querySelectorAll('.policy-section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            policySections.forEach(section => {
+                section.style.opacity = 0;
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
